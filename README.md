@@ -1,2 +1,2 @@
 # D7012E Assignments
- 
+Haskell and Prolog assignments for the course [D7012E Declarative Languages](https://www.ltu.se/en/education/course/d70/d7012e-declarative-languages) for fourth year students in Computer Science at Luleå tekniska universitet.
