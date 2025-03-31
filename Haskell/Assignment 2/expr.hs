@@ -94,3 +94,22 @@ simplify (Op oper left right) =
       ("/",e,Const 1) -> e
       ("-",le,re)     -> if left==right then Const 0 else Op "-" le re
       (op,le,re)      -> Op op le re
+
+
+main :: IO()
+main = do
+  -- Test parse
+  print(parse "10")
+  print(parse "x")
+  print(parse "10+x")
+  print(parse "1+2*(3-4/5)")
+
+  -- Task 1
+  print(unparse (simplify (diff (Var "x") (parse "exp(sin(2*x))")))) -- should print 
+
+  -- Task 2
+  --print(mkfun (parse "x*x+2", Var "x")) -- should evaluate to 11.0
+
+  -- Task 3
+  --print(findzero "x" "x*x*x+x-1" 1.0) -- should evaluate to 0.68232775
+  --print(findzero "y" "cos(y)*sin(y)" 2.0) -- should evaluate to 1.5707964
