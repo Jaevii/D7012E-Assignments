@@ -15,7 +15,7 @@ generateSubsets xs = [Subset
         (i+1) (j+1) -- startIndex, endIndex
         sub -- elements
         | i <- [0..length xs-1], j <- [i..length xs-1] -- i, j
-        , let sub = take (j-i+1) (drop i xs) -- Subset
+        , let sub = grabFirst (j-i+1) (grabLast i xs) -- Subset
     ]
 
 -- Computes the sum of a Subset
