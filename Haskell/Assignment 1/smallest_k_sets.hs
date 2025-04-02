@@ -44,9 +44,21 @@ printSubsets = map formatSubset
 formatSubset :: Subset -> String
 formatSubset s = show (sumOfElements s) ++ "\t" ++ show (startIndex s) ++ "\t" ++ show (endIndex s) ++ "\t" ++ show (elements s)
 
+-- Returns the n first elements of a list (recursive take)
+grabFirst :: Int -> [a] -> [a]
+grabFirst 0 _ = []
+grabFirst _ [] = []
+grabFirst n (x:xs) = x : grabFirst (n-1) xs
+
+-- Returns the elements after the first n elements of a list (recursive drop)
+grabLast :: Int -> [a] -> [a]
+grabLast 0 xs = xs
+grabLast _ [] = []
+grabLast n (x:xs) = grabLast (n-1) xs
+
 -- Function to print the smallest k sets of a list
 smallestKsets :: [Int] -> Int -> IO()
-smallestKsets xs k = putStr ("\nEntire list: " ++ show xs ++ "\n\nsize\ti\tj\tSubset\n" ++ printList (printSubsets (take k (sortSubsets (generateSubsets xs)))) ++ "\n")
+smallestKsets xs k = putStr ("\nEntire list: " ++ show xs ++ "\n\nsize\ti\tj\tSubset\n" ++ printList (printSubsets (grabFirst k (sortSubsets (generateSubsets xs)))) ++ "\n")
 
 -- Test cases --
 test1 = [x*(-1)^x | x <- [1..100]] :: [Int] -- k=15
