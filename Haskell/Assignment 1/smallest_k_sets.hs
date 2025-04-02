@@ -18,6 +18,10 @@ generateSubsets xs = [Subset
         , let sub = grabFirst (j-i+1) (grabLast i xs) -- Subset
     ]
 
+-- Helper function to generate subsets recursively
+callGenRec :: [Int] -> [Subset]
+callGenRec xs = generateSubsetsRec xs 0
+
 -- Recursively generates a list of all possible non-empty Subsets
 generateSubsetsRec :: [Int] -> Int -> [Subset]
 generateSubsetsRec [] _ = [] -- Base case: empty list
@@ -29,7 +33,6 @@ generateSubsetsRec xs i = [Subset
         | j <- [i..length xs-1] -- j
         , let sub = grabFirst (j-i+1) (grabLast i xs) -- Subset
     ] ++ generateSubsetsRec xs (i+1)
-
 
 -- Computes the sum of a Subset
 sumOfList :: [Int] -> Int
@@ -71,7 +74,7 @@ grabLast n (_:xs) = grabLast (n-1) xs
 
 -- Function to print the smallest k sets of a list
 smallestKsets :: [Int] -> Int -> IO()
-smallestKsets xs k = putStr ("\nEntire list: " ++ show xs ++ "\n\nsize\ti\tj\tSubset\n" ++ printList (printSubsets (grabFirst k (sortSubsets (generateSubsetsRec xs 0)))) ++ "\n")
+smallestKsets xs k = putStr ("\nEntire list: " ++ show xs ++ "\n\nsize\ti\tj\tSubset\n" ++ printList (printSubsets (grabFirst k (sortSubsets (callGenRec xs)))) ++ "\n")
 
 -- Test cases --
 test1 = [x*(-1)^x | x <- [1..100]] :: [Int] -- k=15
