@@ -54,7 +54,7 @@ grabFirst n (x:xs) = x : grabFirst (n-1) xs
 grabLast :: Int -> [a] -> [a]
 grabLast 0 xs = xs
 grabLast _ [] = []
-grabLast n (x:xs) = grabLast (n-1) xs
+grabLast n (_:xs) = grabLast (n-1) xs
 
 -- Function to print the smallest k sets of a list
 smallestKsets :: [Int] -> Int -> IO()
