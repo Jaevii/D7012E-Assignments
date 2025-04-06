@@ -95,6 +95,13 @@ simplify (Op oper left right) =
       ("-",le,re)     -> if left==right then Const 0 else Op "-" le re
       (op,le,re)      -> Op op le re
 
+--
+--mkfun :: (EXPR, EXPR) -> (Float -> Float)
+
+-- 
+--findzero :: String -> String -> Float -> Float
+
+
 
 main :: IO()
 main = do
@@ -104,8 +111,10 @@ main = do
   print(parse "10+x")
   print(parse "1+2*(3-4/5)")
 
+  print(unparse (parse "10+x"))
+
   -- Task 1
-  print(unparse (simplify (diff (Var "x") (parse "exp(sin(2*x))")))) -- should print 
+  --print(unparse (simplify (diff (Var "x") (parse "exp(sin(2*x))")))) -- should print the derivative
 
   -- Task 2
   --print(mkfun (parse "x*x+2", Var "x")) -- should evaluate to 11.0

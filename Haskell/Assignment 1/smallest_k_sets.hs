@@ -8,7 +8,7 @@ data Subset = Subset {
     elements :: [Int]
 } deriving (Show)
 
--- Iteratively generates a list of all possible non-empty Subsets
+-- Generates a list of all possible non-empty Subsets using list comprehension
 generateSubsets :: [Int] -> [Subset]
 generateSubsets xs = [Subset
         (sumOfList sub) -- sumOfElements
