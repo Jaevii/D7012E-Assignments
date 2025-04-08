@@ -1,5 +1,7 @@
 -- Code to Haskell lab assignment 2 in the course D7012E by Håkan Jonsson
 
+-- Ludvig Järvi, ludjrv-1 --
+
 import Data.Char
 
 data EXPR = Const Int
@@ -110,8 +112,8 @@ main = do
   print(parse "x")
   print(parse "10+x")
   print(parse "1+2*(3-4/5)")
+  print(parse "sqrt(1+sin(x))")
 
-  print(unparse (parse "10+x"))
 
   -- Task 1
   --print(unparse (simplify (diff (Var "x") (parse "exp(sin(2*x))")))) -- should print the derivative

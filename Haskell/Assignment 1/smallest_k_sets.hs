@@ -8,20 +8,6 @@ data Subset = Subset {
     elements :: [Int]
 } deriving (Show)
 
--- Generates a list of all possible non-empty Subsets using list comprehension
-generateSubsets :: [Int] -> [Subset]
-generateSubsets xs = [Subset
-        (sumOfList sub) -- sumOfElements
-        (i+1) (j+1) -- startIndex, endIndex
-        sub -- elements
-        | i <- [0..length xs-1], j <- [i..length xs-1] -- i, j
-        , let sub = grabFirst (j-i+1) (grabLast i xs) -- Subset
-    ]
-
--- Helper function to generate subsets recursively
-callGenRec :: [Int] -> [Subset]
-callGenRec xs = generateSubsetsRec xs 0
-
 -- Recursively generates a list of all possible non-empty Subsets
 generateSubsetsRec :: [Int] -> Int -> [Subset]
 generateSubsetsRec [] _ = [] -- Base case: empty list
@@ -74,7 +60,7 @@ grabLast n (_:xs) = grabLast (n-1) xs
 
 -- Function to print the smallest k sets of a list
 smallestKsets :: [Int] -> Int -> IO()
-smallestKsets xs k = putStr ("\nEntire list: " ++ show xs ++ "\n\nsize\ti\tj\tSubset\n" ++ printList (printSubsets (grabFirst k (sortSubsets (callGenRec xs)))) ++ "\n")
+smallestKsets xs k = putStr ("\nEntire list: " ++ show xs ++ "\n\nsize\ti\tj\tSubset\n" ++ printList (printSubsets (grabFirst k (sortSubsets (generateSubsetsRec xs 0)))) ++ "\n")
 
 -- Test cases --
 test1 = [x*(-1)^x | x <- [1..100]] :: [Int] -- k=15
