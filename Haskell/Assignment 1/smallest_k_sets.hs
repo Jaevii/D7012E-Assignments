@@ -8,6 +8,16 @@ data Subset = Subset {
     elements :: [Int]
 } deriving (Show)
 
+-- Generates a list of all possible non-empty Subsets using list comprehension
+generateSubsets :: [Int] -> [Subset]
+generateSubsets xs = [Subset
+        (sumOfList sub) -- sumOfElements
+        (i+1) (j+1) -- startIndex, endIndex
+        sub -- elements
+        | i <- [0..length xs-1], j <- [i..length xs-1] -- i, j
+        , let sub = grabFirst (j-i+1) (grabAfter i xs) -- Subset
+    ]
+
 -- Recursively generates a list of all possible non-empty Subsets
 generateSubsetsRec :: [Int] -> Int -> [Subset]
 generateSubsetsRec [] _ = [] -- Base case: empty list
@@ -17,7 +27,7 @@ generateSubsetsRec xs i = [Subset
         (i+1) (j+1) -- startIndex, endIndex
         sub -- elements
         | j <- [i..length xs-1] -- j
-        , let sub = grabFirst (j-i+1) (grabLast i xs) -- Subset
+        , let sub = grabFirst (j-i+1) (grabAfter i xs) -- Subset
     ] ++ generateSubsetsRec xs (i+1)
 
 -- Computes the sum of a Subset
@@ -53,10 +63,10 @@ grabFirst _ [] = []
 grabFirst n (x:xs) = x : grabFirst (n-1) xs
 
 -- Returns the elements after the first n elements of a list (recursive drop)
-grabLast :: Int -> [a] -> [a]
-grabLast 0 xs = xs
-grabLast _ [] = []
-grabLast n (_:xs) = grabLast (n-1) xs
+grabAfter :: Int -> [a] -> [a]
+grabAfter 0 xs = xs
+grabAfter _ [] = []
+grabAfter n (_:xs) = grabAfter (n-1) xs
 
 -- Function to print the smallest k sets of a list
 smallestKsets :: [Int] -> Int -> IO()
