@@ -70,7 +70,7 @@ grabAfter n (_:xs) = grabAfter (n-1) xs
 
 -- Function to print the smallest k sets of a list
 smallestKsets :: [Int] -> Int -> IO()
-smallestKsets xs k = putStr ("\nEntire list: " ++ show xs ++ "\n\nsize\ti\tj\tSubset\n" ++ printList (printSubsets (grabFirst k (sortSubsets (generateSubsetsRec xs 0)))) ++ "\n")
+smallestKsets xs k = putStr ("\nEntire list: " ++ show xs ++ "\n\nsize\ti\tj\tSubset\n" ++ printList (printSubsets (grabFirst k (sortSubsets (generateSubsets xs)))) ++ "\n")
 
 -- Test cases --
 test1 = [x*(-1)^x | x <- [1..100]] :: [Int] -- k=15
