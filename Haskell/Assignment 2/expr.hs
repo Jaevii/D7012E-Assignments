@@ -114,15 +114,12 @@ simplify (App fn e) =
       ("cos", Const 0) -> Const 1 -- cos(0) = 1
       ("log", Const 1) -> Const 0 -- log(1) = 0 
       ("exp", Const 0) -> Const 1 -- exp(0) = 1
-      ("sin", e) -> App "sin" e
-      ("cos", e) -> App "cos" e
-      ("log", e) -> App "log" e
-      ("exp", e) -> App "exp" e
-      (fn, e) -> App fn e
+      (fn, e) -> App fn (simplify e) -- otherwise, just simplify the argument
 
 
 --
---mkfun :: (EXPR, EXPR) -> (Float -> Float)
+mkfun :: (EXPR, EXPR) -> (Float -> Float)
+mkfun (body, var) x = eval body [(unparse var, x)]
 
 -- 
 --findzero :: String -> String -> Float -> Float
@@ -132,7 +129,7 @@ simplify (App fn e) =
 main :: IO()
 main = do
   -- Test parse
-  putStrLn "\nTest: parse"
+  putStrLn "\n-- Test: parse"
   print (parse "10")
   print (parse "x")
   print (parse "10+x")
@@ -141,14 +138,14 @@ main = do
 
 
   -- Task 1: Add support for sin, cos, log, exp
-  putStrLn "\nTask 1: Add support for sin, cos, log, exp"
-  print (unparse (simplify (diff (Var "x") (parse "exp(sin(2*x))")))) -- should print the derivative
+  putStrLn "\n-- Task 1: Add support for sin, cos, log, exp"
+  print (unparse (simplify (diff (Var "x") (parse "exp(sin(2*x))")))) -- should print the derivative: exp(sin(2*x))*cos(2*x)*2
 
   -- Task 2: Add mkfun
-  putStrLn "\nTask 2: mkfun"
-  --print(mkfun (parse "x*x+2", Var "x")) -- should evaluate to 11.0
+  putStrLn "\n-- Task 2: mkfun"
+  print(mkfun (parse "x*x+2", Var "x") 3.0) -- should evaluate to 11.0
 
   -- Task 3: Add findzero
-  putStrLn "\nTask 2: findzero"
+  putStrLn "\n-- Task 2: findzero"
   --print(findzero "x" "x*x*x+x-1" 1.0) -- should evaluate to 0.68232775
   --print(findzero "y" "cos(y)*sin(y)" 2.0) -- should evaluate to 1.5707964
