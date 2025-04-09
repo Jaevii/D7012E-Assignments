@@ -131,7 +131,7 @@ findzero name body = nrStep f f'
 -- Newton-Raphson step
 nrStep :: (Float -> Float) -> (Float -> Float) -> Float -> Float
 nrStep f f' x0
-  | abs (f x0) < 0.00001 = x0
+  | abs (x1 - x0) <= 0.0001 = x0
   | otherwise = nrStep f f' x1
   where
     x1 = x0 - f x0 / f' x0
