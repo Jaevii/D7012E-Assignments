@@ -112,17 +112,18 @@ simplify (App fn e) =
     case (fn, es) of
       ("sin", Const 0) -> Const 0 -- sin(0) = 0
       ("cos", Const 0) -> Const 1 -- cos(0) = 1
-      ("log", Const 1) -> Const 0 -- log(1) = 0 
+      ("log", Const 1) -> Const 0 -- log(1) = 0
       ("exp", Const 0) -> Const 1 -- exp(0) = 1
       (fn, e) -> App fn (simplify e) -- otherwise, just simplify the argument
 
 
---
-mkfun :: (EXPR, EXPR) -> (Float -> Float)
-mkfun (body, var) x = eval body [(unparse var, x)]
+-- The function can be evaluated by applying eval to body in a context where var is bound to its value
+mkfun :: (EXPR, EXPR) -> Float -> Float
+mkfun (body, var) f = eval body [(unparse var, f)]
 
 -- 
---findzero :: String -> String -> Float -> Float
+findzero :: String -> String -> Float -> Float
+findzero name body x0 = 
 
 
 
@@ -147,5 +148,5 @@ main = do
 
   -- Task 3: Add findzero
   putStrLn "\n-- Task 2: findzero"
-  --print(findzero "x" "x*x*x+x-1" 1.0) -- should evaluate to 0.68232775
+  print(findzero "x" "x*x*x+x-1" 1.0) -- should evaluate to 0.68232775
   --print(findzero "y" "cos(y)*sin(y)" 2.0) -- should evaluate to 1.5707964
