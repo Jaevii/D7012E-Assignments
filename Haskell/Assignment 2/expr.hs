@@ -121,9 +121,10 @@ simplify (App fn e) =
 mkfun :: (EXPR, EXPR) -> Float -> Float
 mkfun (body, var) f = eval body [(unparse var, f)]
 
--- 
+-- Solve equation using Newton-Raphson's method (x1 = x0 - f(x0)/f'(x0))
 findzero :: String -> String -> Float -> Float
 findzero name body x0 = 
+
 
 
 
