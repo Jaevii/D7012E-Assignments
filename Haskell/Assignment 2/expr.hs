@@ -118,15 +118,23 @@ simplify (App fn e) =
 
 
 -- The function can be evaluated by applying eval to body in a context where var is bound to its value
-mkfun :: (EXPR, EXPR) -> Float -> Float
-mkfun (body, var) f = eval body [(unparse var, f)]
+mkfun :: (EXPR, EXPR) -> (Float -> Float)
+mkfun (body, Var var) f = eval body [(var, f)]
 
--- Solve equation using Newton-Raphson's method (x1 = x0 - f(x0)/f'(x0))
+-- Solve equation using Newton-Raphson's method
 findzero :: String -> String -> Float -> Float
-findzero name body x0 = 
+findzero name body = nrStep f f'
+  where -- Calculate the function and its derivative only once
+    f = mkfun (parse body, Var name)
+    f' = mkfun (simplify (diff (Var name) (parse body)), Var name)
 
-
-
+-- Newton-Raphson step
+nrStep :: (Float -> Float) -> (Float -> Float) -> Float -> Float
+nrStep f f' x0
+  | abs (f x0) < 0.00001 = x0
+  | otherwise = nrStep f f' x1
+  where
+    x1 = x0 - f x0 / f' x0
 
 main :: IO()
 main = do
@@ -150,4 +158,5 @@ main = do
   -- Task 3: Add findzero
   putStrLn "\n-- Task 2: findzero"
   print(findzero "x" "x*x*x+x-1" 1.0) -- should evaluate to 0.68232775
-  --print(findzero "y" "cos(y)*sin(y)" 2.0) -- should evaluate to 1.5707964
+  print(findzero "y" "cos(y)*sin(y)" 2.0) -- should evaluate to 1.5707964
+  print(findzero "z" "z*z*z+1337" 5.0) -- should evaluate to -11.016504
