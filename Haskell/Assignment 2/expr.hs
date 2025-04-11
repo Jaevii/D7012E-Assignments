@@ -68,11 +68,13 @@ eval (Op "+" left right) env = eval left env + eval right env
 eval (Op "-" left right) env = eval left env - eval right env
 eval (Op "*" left right) env = eval left env * eval right env
 eval (Op "/" left right) env = eval left env / eval right env
+eval (Op _ left right) env = error "Invalid Operator"
 -- Task 1:
 eval (App "sin" e) env = sin (eval e env)
 eval (App "cos" e) env = cos (eval e env)
 eval (App "log" e) env = log (eval e env)
 eval (App "exp" e) env = exp (eval e env)
+eval (App _ e) env = error "Invalid Operator"
 
 diff :: EXPR -> EXPR -> EXPR
 diff _ (Const _) = Const 0
