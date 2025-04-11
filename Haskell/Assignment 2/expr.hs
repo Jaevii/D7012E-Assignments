@@ -123,7 +123,7 @@ mkfun (body, Var var) = \x -> eval (simplify body) [(var, x)]
 
 -- Solve equation using Newton-Raphson's method
 findzero :: String -> String -> Float -> Float
-findzero name body = nrStep f f'
+findzero name body x0 = nrStep f f' x0
   where -- Calculate the function and its derivative only once
     f = mkfun (parse body, Var name)
     f' = mkfun (simplify (diff (Var name) (parse body)), Var name)
