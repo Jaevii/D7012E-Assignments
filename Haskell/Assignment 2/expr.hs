@@ -119,7 +119,7 @@ simplify (App fn e) =
 
 -- The function can be evaluated by applying eval to body in a context where var is bound to its value
 mkfun :: (EXPR, EXPR) -> (Float -> Float)
-mkfun (body, Var var) f = eval body [(var, f)]
+mkfun (body, Var var) = (\x -> eval (simplify body) [(var, x)])
 
 -- Solve equation using Newton-Raphson's method
 findzero :: String -> String -> Float -> Float
@@ -145,7 +145,6 @@ main = do
   print (parse "10+x")
   print (parse "1+2*(3-4/5)")
   print (unparse (parse "sqrt(1+sin(x))"))
-
 
   -- Task 1: Add support for sin, cos, log, exp
   putStrLn "\n-- Task 1: Add support for sin, cos, log, exp"
