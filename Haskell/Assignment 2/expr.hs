@@ -119,7 +119,7 @@ simplify (App fn e) =
 
 -- The function can be evaluated by applying eval to body in a context where var is bound to its value
 mkfun :: (EXPR, EXPR) -> (Float -> Float)
-mkfun (body, Var var) = (\x -> eval (simplify body) [(var, x)])
+mkfun (body, Var var) = \x -> eval (simplify body) [(var, x)]
 
 -- Solve equation using Newton-Raphson's method
 findzero :: String -> String -> Float -> Float
