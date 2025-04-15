@@ -76,9 +76,9 @@ value (Var v) env = case Dictionary.lookup v env of Just y -> y ; _ -> error ("u
 value (Add e1 e2) env = value e1 env + value e2 env
 value (Sub e1 e2) env = value e1 env - value e2 env
 value (Mul e1 e2) env = value e1 env * value e2 env
-value (Div n d) env
-        | value d env == 0      = error "division by 0"
-        | otherwise             = value n env `div` value d env
+value (Div n d) env = case value d env of
+        0 -> error "division by 0"
+        _ -> div (value n env) (value d env)
 
 instance Parse Expr where
     parse = expr
