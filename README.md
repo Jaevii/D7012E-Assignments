@@ -2,7 +2,7 @@
 Haskell and Prolog assignments for the course [D7012E Declarative Languages](https://www.ltu.se/en/education/course/d70/d7012e-declarative-languages) for fourth year students in Computer Science at Luleå tekniska universitet.
 
 ## Haskell
-Requires GHCup
+### Requires GHCup
 
 Install on Windows in PowerShell using:
 ```bash
@@ -21,12 +21,14 @@ runhaskell file.hs
 
 Or compile and run programs using the GHCi terminal with:
 ```bash
-GHCi file.hs
+ghci file.hs
 ``` 
 
-Some "good-to-know" GHCi commands:
+### Some "good-to-know" GHCi commands:
+
 `:quit` or `Ctrl+D`: Exits the GHCi-terminal
+
 `Ctrl+L`: Clear the GHCi-terminal
 
 ## Prolog
-Coming soon
+Coming soon...
