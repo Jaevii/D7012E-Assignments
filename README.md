@@ -14,10 +14,19 @@ Or on MacOS, Linux using:
 curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 ``` 
 
-Compile and run programs with:
+Run programs with:
 ```bash
-runhaskell program_name.hs
+runhaskell file.hs
 ``` 
+
+Or compile and run programs using the GHCi terminal with:
+```bash
+GHCi file.hs
+``` 
+
+Some "good-to-know" GHCi commands:
+`:quit` or `Ctrl+D`: Exits the GHCi-terminal
+`Ctrl+L`: Clear the GHCi-terminal
 
 ## Prolog
 Coming soon
