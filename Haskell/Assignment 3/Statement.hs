@@ -6,6 +6,17 @@ import qualified Expr
 
 type T = Statement
 
+-- program ::= statements
+-- statement ::= variable ':=' expr ';'
+--    | 'skip' ';'
+--    | 'begin' statements 'end'
+--    | 'if' expr 'then' statement 'else' statement
+--    | 'while' expr 'do' statement
+--    | 'read' variable ';'
+--    | 'write' expr ';'
+-- statements ::= {statement}
+-- variable ::= letter {letter}
+
 data Statement =
       Assignment String Expr.T        
     | If Expr.T Statement Statement   
@@ -75,4 +86,11 @@ instance Parse Statement where
   -- Use the ! operator to find the correct parser
   parse = skip ! assignment ! if' ! begin ! while ! read' ! write
 
-  toString = error "Statement.toString not implemented"
+  toString :: Statement -> String
+  toString (Assignment v e) = v ++ " := " ++ Expr.toString e ++ ";\n"
+  toString (If cond thenStmts elseStmts) = "if " ++ Expr.toString cond ++ " then\n" ++ toString thenStmts ++ "else\n" ++ toString elseStmts
+  toString (Skip) = "skip;\n"
+  toString (Begin s) = "begin\n" ++ concatMap toString s ++ "end\n"
+  toString (While e s) = "while " ++ Expr.toString e ++ " do\n" ++ toString s
+  toString (Read v) = "read " ++ v ++ ";\n"
+  toString (Write e) = "write " ++ Expr.toString e ++ ";\n"
