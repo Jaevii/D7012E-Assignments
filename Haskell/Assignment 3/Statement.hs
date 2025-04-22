@@ -24,7 +24,8 @@ data Statement =
     | Begin [Statement]               
     | While Expr.T Statement          
     | Read String                     
-    | Write Expr.T 
+    | Write Expr.T
+    | Repeat Statement Expr.T
     deriving Show
 
 -- Assignment
@@ -50,6 +51,10 @@ read' = accept "read" -# word #- require ";" >-> Read
 
 -- Write
 write = accept "write" -# Expr.parse #- require ";" >-> Write
+
+-- Repeat
+repeat' = accept "repeat" -# parse #- require "until" # Expr.parse #- require ";" >-> buildRepeat
+buildRepeat (s, e) = Repeat s e
 
 
 exec :: [T] -> Dictionary.T String Integer -> [Integer] -> [Integer]
@@ -82,9 +87,16 @@ exec (Read v: stmts) dict input =
 exec (Write e: stmts) dict input = 
     Expr.value e dict : exec stmts dict input
 
+exec (Repeat s e: stmts) dict input =
+  exec (s : control : stmts) dict input
+  where
+    control = if (Expr.value e dict) > 0
+              then Skip
+              else Repeat s e
+
 instance Parse Statement where
   -- Use the ! operator to find the correct parser
-  parse = skip ! assignment ! if' ! begin ! while ! read' ! write
+  parse = skip ! assignment ! if' ! begin ! while ! read' ! write ! repeat'
 
   toString :: Statement -> String
   toString (Assignment v e) = v ++ " := " ++ Expr.toString e ++ ";\n"
@@ -94,3 +106,4 @@ instance Parse Statement where
   toString (While e s) = "while " ++ Expr.toString e ++ " do\n" ++ toString s
   toString (Read v) = "read " ++ v ++ ";\n"
   toString (Write e) = "write " ++ Expr.toString e ++ ";\n"
+  toString (Repeat s e) = "repeat\n" ++ toString s ++ "until " ++ Expr.toString e ++ ";\n"
