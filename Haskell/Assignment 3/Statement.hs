@@ -42,6 +42,8 @@ write = accept "write" -# Expr.parse #- require ";" >-> Write
 
 
 exec :: [T] -> Dictionary.T String Integer -> [Integer] -> [Integer]
+
+-- Base case
 exec [] _ _ = []
 
 exec (Assignment v e: stmts) dict input =
