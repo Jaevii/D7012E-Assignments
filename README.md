@@ -31,4 +31,21 @@ ghci file.hs
 `Ctrl+L`: Clear the GHCi-terminal
 
 ## Prolog
-Coming soon...
+### Requires SWI-Prolog
+Download SWI-Prolog [here](https://www.swi-prolog.org/download/devel)
+
+Enter the swipl-terminal to run programs:
+```bash
+swipl file.pl
+``` 
+
+Or use the shell script:
+```bash
+./run.sh
+``` 
+
+### Some "good-to-know" swipl commands:
+
+`foo.`: Runs the function named "foo"
+
+`halt.`: Exits the swipl-terminal
