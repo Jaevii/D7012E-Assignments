@@ -70,6 +70,7 @@ shw prec (Sub t u) = parens (prec>5) (shw 5 t ++ "-" ++ shw 6 u)
 shw prec (Mul t u) = parens (prec>6) (shw 6 t ++ "*" ++ shw 6 u)
 shw prec (Div t u) = parens (prec>6) (shw 6 t ++ "/" ++ shw 7 u)
 
+-- Similar to lab 2s eval
 value :: Expr -> Dictionary.T String Integer -> Integer
 value (Num n) _ = n
 value (Var v) env = case Dictionary.lookup v env of Just y -> y ; _ -> error ("undefined variable " ++ v)

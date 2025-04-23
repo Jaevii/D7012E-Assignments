@@ -66,7 +66,7 @@ exec (Assignment v e: stmts) dict input =
     exec stmts (Dictionary.insert (v, Expr.value e dict) dict) input
 
 exec (If cond thenStmts elseStmts: stmts) dict input = 
-    if (Expr.value cond dict)>0 
+    if (Expr.value cond dict) > 0 
     then exec (thenStmts: stmts) dict input
     else exec (elseStmts: stmts) dict input
 
@@ -90,9 +90,7 @@ exec (Write e: stmts) dict input =
 exec (Repeat s e: stmts) dict input =
   exec (s : control : stmts) dict input
   where
-    control = if (Expr.value e dict) > 0
-              then Skip
-              else Repeat s e
+    control = If e Skip (Repeat s e)
 
 instance Parse Statement where
   -- Use the ! operator to find the correct parser
