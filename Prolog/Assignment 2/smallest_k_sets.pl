@@ -14,6 +14,7 @@ take(N, [Head|Tail], [Head|Result]) :-
     N1 is N - 1,
     take(N1, Tail, Result).
 
+
 % 1. Generete all subsets of a list, a subset is defined as [Sum, Start-index, End-index, [Elements]]
 
 create_subset([], _, []).
@@ -34,6 +35,7 @@ generate_subsets([H|T], Index, Subsets) :-
     Next is Index + 1,
     generate_subsets(T, Next, Sets),
     append(Result, Sets, Subsets).
+
 
 % 2. Sort subsets by sum using Merge sort
 
@@ -60,7 +62,6 @@ sort_sets(List, SortedSubsets) :-
     merge(SortedL1, SortedL2, SortedSubsets).
 
 
-
 % 3. Print the k smallest subsets
 
 print_smallest_sets([]).
@@ -74,7 +75,7 @@ print_smallest_sets([(Sum, I, J, Set)|T]) :-
     write(Set),
     write('\n'),
     print_smallest_sets(T).
-    
+
 
 % 4. Test the program with a sample set and k value
 smallest_k_sets(List, K) :-
