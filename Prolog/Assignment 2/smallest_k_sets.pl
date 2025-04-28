@@ -88,5 +88,5 @@ smallest_k_sets(List, K) :-
     write('\n').
 
 test :- 
-    %smallest_k_sets([24,-11,-34,42,-24,7,-19,21], 6).
+    smallest_k_sets([24,-11,-34,42,-24,7,-19,21], 6),
     smallest_k_sets([3,2,-4,3,2,-5,-2,2,3,-3,2,-5,6,-2,2,3], 8).

@@ -79,4 +79,5 @@ test3 = [3,2,-4,3,2,-5,-2,2,3,-3,2,-5,6,-2,2,3] :: [Int] -- k=8
 
 main :: IO()
 main = do
+    smallestKsets test2 6
     smallestKsets test3 8
