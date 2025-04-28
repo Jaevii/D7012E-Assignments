@@ -22,7 +22,7 @@ create_subset(Set, Index, Result) :-
     length(Set, Len),
     J is I + Len - 1,
     Subset = [(Sum, I, J, Set)],
-    ToTake is Len - 1,
+    ToTake is Len - 1, 
     take(ToTake, Set, Next),
     create_subset(Next, I, Rest),
     append(Subset, Rest, Result).
@@ -30,17 +30,19 @@ create_subset(Set, Index, Result) :-
 generate_subsets([], _, []).
 generate_subsets([H|T], Index, Subsets) :-
     create_subset([H|T], Index, Result),
-    Next is Index + 1,
-    generate_subsets(T, Next, Sets),
+    NextIndex is Index + 1,
+    generate_subsets(T, NextIndex, Sets),
     append(Result, Sets, Subsets).
 
 
 % 2. Sort subsets by sum using Merge sort
+% Divide the list by alternating elements into L1 and l2
 divide([], [], []).
 divide([X], [X], []).
 divide([X,Y|Rest], [X|L1], [Y|L2]) :-
     divide(Rest, L1, L2).
 
+% Compare the sum of the first set from L1 and L2, the smallest set is added first to the result
 merge([], L, L).
 merge(L, [], L).
 merge([(Sum1, I1, J1, Set1) | T1], [(Sum2, I2, J2, Set2) | T2], [(Sum1, I1, J1, Set1) | T]) :-
@@ -50,8 +52,8 @@ merge([(Sum1, I1, J1, Set1) | T1], [(Sum2, I2, J2, Set2) | T2], [(Sum2, I2, J2, 
     Sum1 > Sum2,
     merge([(Sum1, I1, J1, Set1) | T1], T2, T).
 
-sort_sets([], []) :- !.
-sort_sets([X], [X]) :- !.
+sort_sets([], []).
+sort_sets([X], [X]).
 sort_sets(List, SortedSubsets) :-
     divide(List, L1, L2),
     sort_sets(L1, SortedL1),
@@ -78,11 +80,13 @@ smallest_k_sets(List, K) :-
     generate_subsets(List, 1, Subsets),
     sort_sets(Subsets, SortedSubsets),
     take(K, SortedSubsets, SmallestSets),
-    write("Entire list: "),
+    write('\n'),
+    write('Entire list: '),
     write(List),
     writeln("\n\nsize\ti\tj\tSubset"),
-    print_smallest_sets(SmallestSets).
+    print_smallest_sets(SmallestSets),
+    write('\n').
 
 test :- 
-    smallest_k_sets([24,-11,-34,42,-24,7,-19,21], 6).
-    %smallest_k_sets([3,2,-4,3,2,-5,-2,2,3,-3,2,-5,6,-2,2,3], 8).
+    %smallest_k_sets([24,-11,-34,42,-24,7,-19,21], 6).
+    smallest_k_sets([3,2,-4,3,2,-5,-2,2,3,-3,2,-5,6,-2,2,3], 8).
