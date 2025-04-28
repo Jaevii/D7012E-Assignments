@@ -1,7 +1,6 @@
 % Ludvig Järvi, ludjrv-1
 
 % Help functions
-
 sum_of_set([], 0).
 sum_of_set([Head|Tail], Sum) :-
     sum_of_set(Tail, TotalSum),
@@ -16,7 +15,6 @@ take(N, [Head|Tail], [Head|Result]) :-
 
 
 % 1. Generete all subsets of a list, a subset is defined as [Sum, Start-index, End-index, [Elements]]
-
 create_subset([], _, []).
 create_subset(Set, Index, Result) :-
     sum_of_set(Set, Sum),
@@ -38,7 +36,6 @@ generate_subsets([H|T], Index, Subsets) :-
 
 
 % 2. Sort subsets by sum using Merge sort
-
 divide([], [], []).
 divide([X], [X], []).
 divide([X,Y|Rest], [X|L1], [Y|L2]) :-
@@ -63,7 +60,6 @@ sort_sets(List, SortedSubsets) :-
 
 
 % 3. Print the k smallest subsets
-
 print_smallest_sets([]).
 print_smallest_sets([(Sum, I, J, Set)|T]) :-
     write(Sum),
