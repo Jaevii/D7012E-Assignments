@@ -39,5 +39,15 @@ Can the robot fetch the package from room r3 and bring it to room r2? If so, how
 */
 
 
+% Move between rooms
+
+
+% Pick up items
+
+
+% Drop items
+
+
+
 
 test :- 
