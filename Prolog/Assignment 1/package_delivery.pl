@@ -36,10 +36,9 @@ Can the robot fetch the package from room r3 and bring it to room r2? If so, how
     10. Pick up the Steel key from r1.
     11. Move into r2.
     12. DONE
-
-State is defined as state(Robot position, Steel Key position, Brass Key position, Package position, Number of held Items)
 */
 
+% State is defined as state(Robot position, Steel Key position, Brass Key position, Package position, Number of held Items)
 
 % Move between rooms
 % R1 <-> R2
