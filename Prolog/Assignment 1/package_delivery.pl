@@ -39,6 +39,7 @@ Can the robot fetch the package from room r3 and bring it to room r2? If so, how
 */
 
 % State is defined as state(Robot position, Steel Key position, Brass Key position, Package position, Number of held Items)
+% Position is either r1, r2, r3 or held
 
 % Move between rooms
 % R1 <-> R2
