@@ -42,7 +42,7 @@ Can the robot fetch the package from room r3 and bring it to room r2? If so, how
 % State is defined as state(Robot position, Steel Key position, Brass Key position, Package position, Number of held Items)
 % Position is either r1, r2, r3 or held
 
-% Move between rooms
+% %%%%%%%%%%%%%%% Move between rooms %%%%%%%%%%%%%%%
 % R1 <-> R2
 action(state(r1, held, BrassKey, Package, Items), move(r1, r2), state(r2, held, BrassKey, Package, Items)).
 
@@ -53,7 +53,7 @@ action(state(r1, SteelKey, held, Package, Items), move(r1, r3), state(r3, SteelK
 
 action(state(r3, SteelKey, held, Package, Items), move(r3, r1), state(r1, SteelKey, held, Package, Items)).
 
-% Pick up items
+% %%%%%%%%%%%%%%% Pick up items %%%%%%%%%%%%%%%
 % Steel Key
 action(state(Robot, Robot, BrassKey, Package, Items), pickUp(steelkey, Robot), state(Robot, held, BrassKey, Package, NewItems)) :-
     Items < 2,
@@ -69,7 +69,7 @@ action(state(Robot, SteelKey, BrassKey, Robot, Items), pickUp(package, Robot), s
     Items < 2,
     NewItems is Items + 1.
 
-% Drop items
+% %%%%%%%%%%%%%%% Drop items %%%%%%%%%%%%%%%
 % Steel Key
 action(state(Robot, held, BrassKey, Package, Items), drop(steelkey, Robot), state(Robot, Robot, BrassKey, Package, NewItems)) :-
     NewItems is Items - 1.
@@ -82,7 +82,7 @@ action(state(Robot, SteelKey, held, Package, Items), drop(brasskey, Robot), stat
 action(state(Robot, SteelKey, BrassKey, held, Items), drop(package, Robot), state(Robot, SteelKey, BrassKey, Robot, NewItems)) :-
     NewItems is Items - 1.
 
-% Solve
+% %%%%%%%%%%%%%%% Solve %%%%%%%%%%%%%%%
 solveR(state(_, _, _, r2, _), _, [done|[]]). % Goal: Package has been dropped in r2.
 solveR(State, N, [Action|Trace]) :-
     N > 0,
