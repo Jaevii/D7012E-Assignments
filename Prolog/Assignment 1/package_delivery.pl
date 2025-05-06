@@ -91,7 +91,7 @@ solveR(State, N, [Action|Trace]) :-
     solveR(NewState, N1, Trace).
 
 start(T) :- 
-    solveR(state(r1, r1, r2, r1, 0), 4, T),
+    solveR(state(r1, r1, r2, r3, 0), 12, T),
     printL(T, 1).
 
 % Print list helper function
