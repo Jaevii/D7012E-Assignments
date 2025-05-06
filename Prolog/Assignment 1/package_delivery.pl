@@ -82,7 +82,7 @@ action(state(Robot, SteelKey, BrassKey, held, Items), drop(package, Robot), stat
     NewItems is Items - 1.
 
 % Solve
-solveR(state(_, _, _, r2, _), _, [done|[]]). % Goal: Robot is in r2 holding the package
+solveR(state(_, _, _, r2, _), _, [done|[]]). % Goal: Package has been dropped in r2.
 solveR(State, N, [Action|Trace]) :-
     N > 0,
     action(State, Action, NewState),

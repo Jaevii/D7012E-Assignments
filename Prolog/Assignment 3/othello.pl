@@ -10,7 +10,7 @@
 
 
 
-%do not chagne the follwoing line!
+%do not change the following line!
 :- ensure_loaded('play.pl').
 
 
