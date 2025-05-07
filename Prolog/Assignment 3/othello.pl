@@ -53,7 +53,7 @@
 %
 % We use the following State Representation: 
 % [Row0, Row1 ... Rown] (ours is 6x6 so n = 5 ).
-% each Rowi is a LIST of 6 elements '.' or '1' or '2' as follows: 
+% each Row is a LIST of 6 elements '.' or '1' or '2' as follows: 
 %    . means the position is  empty
 %    1 means player one has a stone in this position
 %    2 means player two has a stone in this position. 
@@ -66,12 +66,12 @@
 %
 % given helper: Inital state of the board
 
-initBoard([ [.,.,.,.,.,.], 
+initBoard([	[.,.,.,.,.,.], 
             [.,.,.,.,.,.],
-	    [.,.,1,2,.,.], 
-	    [.,.,2,1,.,.], 
+	    	[.,.,1,2,.,.], 
+	    	[.,.,2,1,.,.], 
             [.,.,.,.,.,.], 
-	    [.,.,.,.,.,.] ]).
+	    	[.,.,.,.,.,.] ]).
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
 %
@@ -81,8 +81,8 @@ initBoard([ [.,.,.,.,.,.],
 %%%  InitialPlyr is the player who moves first. 
 
 
-
-
+initialize(InitState,1) :-
+	initBoard(InitState).
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
 %
@@ -92,9 +92,21 @@ initBoard([ [.,.,.,.,.,.],
 %     - returns winning player if State is a terminal position and
 %     Plyr has a higher score than the other player 
 
+countRow([], _, 0).
+countRow([Stone|Rest], Plyr, Score) :-
+	countRow(Rest, Plyr, RestScore),
+	(Stone == Plyr -> Score is RestScore + 1; Score is RestScore).
 
+score([], _, 0).
+score([Row|Board], Plyr, Score) :-
+	score(Board, Plyr, RestScore),
+	countRow(Row, Plyr, RowScore),
+	Score = RowScore + RowScore.
 
-
+winner(State, Plyr) :-
+	terminal(State), % check if state is terminal
+	score(State, 1, S1), score(State, 2, S2), % calculate scores for each player
+	(S1 < S2, Plyr = 1; S2 < S1, Plyr = 2). % compare scores
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
 %
@@ -104,7 +116,10 @@ initBoard([ [.,.,.,.,.,.],
 %    - true if terminal State is a "tie" (no winner) 
 
 
-
+tie(State) :-
+	terminal(State), % check if state is terminal
+	score(State, 1, S1), score(State, 2, S2), % calculate scores for each player
+	S1 == S2. % check if scores are equal
 
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
@@ -115,7 +130,13 @@ initBoard([ [.,.,.,.,.,.],
 %   - true if State is a terminal   
 
 
-
+terminal(State) :-
+	% Check moves for each player
+	moves(1,State,MvList1),
+	moves(2,State,MvList2),
+	% If both are empty, the game is over
+	MvList1 == [],
+	MvList1 == [].
 
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
@@ -148,7 +169,7 @@ printList([H | L]) :-
 %
 
 
-
+moves(Plyr,State,MvList) :-
 
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
@@ -161,7 +182,7 @@ printList([H | L]) :-
 %
 
 
-
+nextState(Plyr,Move,State,NewState,NextPlyr) :-
 
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
@@ -172,7 +193,7 @@ printList([H | L]) :-
 %   - true if Proposed move by Plyr is valid at State.
 
 
-
+validmove(Plyr,State,Proposed) :-
 
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
@@ -188,7 +209,7 @@ printList([H | L]) :-
 %          good heuristics.
 
 
-
+h(State,Val) :-
 
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
@@ -200,7 +221,7 @@ printList([H | L]) :-
 %     of all states.
 
 
-
+lowerBound(-100).
 
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
@@ -211,7 +232,7 @@ printList([H | L]) :-
 %   - returns a value B that is greater than the actual or heuristic value
 %     of all states.
 
-
+upperBound(100).
 
 
 
