@@ -5,4 +5,4 @@
 
 # Runs the given program from argument
 # "./play.sh" ttt or "./play.sh othello"
-swipl -q -s $1.pl -g "play, halt."
+swipl -q -s $1.pl -g "play."
