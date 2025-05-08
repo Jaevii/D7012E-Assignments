@@ -66,7 +66,7 @@
 %
 % given helper: Inital state of the board
 
-initBoard([	[.,.,.,.,.,.], 
+initBoard([	[.,2,2,2,2,1], 
             [.,.,.,.,.,.],
 	    	[.,.,1,2,.,.], 
 	    	[.,.,2,1,.,.], 
@@ -131,12 +131,9 @@ tie(State) :-
 
 
 terminal(State) :-
-	% Check moves for each player
-	moves(1,State,MvList1),
-	moves(2,State,MvList2),
-	% If both are empty, the game is over
-	MvList1 == [],
-	MvList2 == [].
+	% Check moves for each player, If both are empty, the game is over
+	moves(1,State,[]),
+	moves(2,State,[]).
 
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
@@ -192,7 +189,7 @@ nextState(Plyr,Move,State,NewState,NextPlyr) :-
 	flipStones(TS, Plyr, Move, Dirs, NewState),
 	% Check player for next turn
 	opponent(Plyr, Opp),
-	moves(Opp, State, MvList),
+	moves(Opp, NewState, MvList),
 	(MvList == [] -> NextPlyr = Plyr ; NextPlyr = Opp).
 
 flipStones(State, _, _, [], State). % Base case: all directions done
@@ -201,9 +198,9 @@ flipStones(State, Plyr, Move, [Dir|Dirs], NewState) :-
 	flipStones(TS, Plyr, Move, Dirs, NewState).	% Next direction
 
 flip(State, OGS, Plyr, [X, Y], [DX, DY], NewState) :-
-    X1 is X + DX,
-    Y1 is Y + DY,
-	border_check(State, [X1,Y1]), 
+	X1 is X + DX,
+	Y1 is Y + DY,
+	border_check(State, [X1,Y1]),
 	opponent(Plyr, Opp),
 	get(State, [X1,Y1], Val),
 	(
@@ -239,6 +236,7 @@ validmove(Plyr,State,Proposed) :-
 	dirs(Dirs),
 	member(Dir, Dirs),
 	check_direction(State, Plyr, Opp, Proposed, Dir).
+	% TODO: add sort list
 
 check_direction(State, Plyr, Opp, [X, Y], [DX, DY]) :-
     X1 is X + DX,
@@ -273,7 +271,16 @@ check_chain(State, Plyr, [X, Y], [DX, DY]) :-
 %          good heuristics.
 
 
-%h(State, Val) :-
+h(State, -99):-
+	winner(State, 1),!.
+
+h(State, 99) :-
+	winner(State, 2),!.
+
+h(State, 0) :-
+	tie(State), !.
+
+h(_,0).
 
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
@@ -285,7 +292,7 @@ check_chain(State, Plyr, [X, Y], [DX, DY]) :-
 %     of all states.
 
 
-lowerBound(-101).
+lowerBound(-150).
 
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
@@ -296,7 +303,7 @@ lowerBound(-101).
 %   - returns a value B that is greater than the actual or heuristic value
 %     of all states.
 
-upperBound(101).
+upperBound(150).
 
 
 
