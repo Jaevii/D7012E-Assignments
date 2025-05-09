@@ -87,8 +87,8 @@ initBoard([	[.,.,.,.,.,.],
 %%%  InitialPlyr is the player who moves first. 
 
 
-initialize(InitState,1) :-
-	forcing1toDoNullMoves(InitState).
+initialize(InitState,2) :-
+	forcing2toDoNullMove(InitState).
 	%rndBoardXYZ(InitState).
 	%initBoard(InitState).
 
@@ -191,8 +191,13 @@ moves(Plyr, [Row|RestBoard], MvList) :-
 
 % Will always be a valid move since it is checked in play.pl
 
+nextState(Plyr,null,State,State,Opp) :-
+	opponent(Plyr, Opp),
+	writeln('Computer has passed the turn!').
+
 nextState(Plyr,[n],State,State,Opp) :-
-	opponent(Plyr, Opp).
+	opponent(Plyr, Opp),
+	writeln('Player has passed the turn!').
 
 nextState(Plyr,Move,State,NewState,NextPlyr) :-
 	set(State, TS, Move, Plyr),
@@ -201,7 +206,7 @@ nextState(Plyr,Move,State,NewState,NextPlyr) :-
 	% Check player for next turn
 	opponent(Plyr, Opp),
 	moves(Opp, NewState, MvList),
-	(MvList == [] -> NextPlyr = Plyr ; NextPlyr = Opp).
+	(MvList == [] -> writeln('Opponent has no valid moves. Go again!'), NextPlyr = Plyr ; NextPlyr = Opp).
 
 flipStones(State, _, _, [], State).
 flipStones(State, Plyr, Move, [Dir|Dirs], NewState) :-
@@ -238,7 +243,8 @@ border_check([Row|_], [X, Y]) :-
 	X >= 0, X < N,
 	Y >= 0, Y < N.
 
-validmove(_, _, [n]) :- true.
+validmove(1, _, [n]) :- true.
+validmove(2, _, null) :- true.
 validmove(Plyr,State,Proposed) :-
 	% Position must be empty
 	get(State, Proposed, '.'),
