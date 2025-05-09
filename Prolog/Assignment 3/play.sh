@@ -12,4 +12,4 @@ fi
 
 # Runs the given program from argument
 # "./play.sh" ttt or "./play.sh othello"
-swipl -q -s $1.pl -g "initBoard(B), showState(B), moves(1, B, MvList)."
+swipl -q -s $1.pl -g "forcing1toDoNullMoves(B), showState(B), moves(1, B, MvList)."

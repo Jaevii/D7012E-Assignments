@@ -85,7 +85,8 @@ play :- initialize(InitState,Plyr), playgame(Plyr,InitState).
 playgame(_,State) :- 
   winner(State,Winner), !, 
   % winner(State,Winner,Score), 
-  write('Win by Player number '), writeln(Winner). 
+  write('Win by Player number '), writeln(Winner),
+  showState(State). 
   % write('Win by Player number '), write(Winner), 
   % write('With Score '), writeln(Score). 
  

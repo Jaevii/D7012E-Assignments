@@ -35,7 +35,7 @@ changeXYZ(B,X,Y,NewB) :- % change row to Y-1 when X<0, and set X back to 5 again
   X<0, Y2 is Y-1, X2 is 5,
 changeXYZ(B,X2,Y2,NewB).
 changeXYZ(B,X,Y,NewB) :- % place random content on square [X,Y], and recur
-  random_member(V,[1,2,'.']), % Equal probability
+  random_member(V,[1,2,2,2,'.']), % Equal probability
   % random_member(V,[1,2,'.','.']), % 50% '.', 25% 1, and 25% 2
   % random_member(V,[1,1,2,2,'.']), % 20% '.', 40% 1, and 40% 2
   set(B,B2,[X,Y],V),

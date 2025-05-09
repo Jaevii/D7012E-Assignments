@@ -13,6 +13,12 @@
 %do not change the following line!
 :- ensure_loaded('play.pl').
 
+% For rndBoardXYZ(B)
+:- ensure_loaded('rndBoard.pl').
+
+% For testboard(B)
+:- ensure_loaded('testboards.pl').
+
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
 %
@@ -82,7 +88,9 @@ initBoard([	[.,.,.,.,.,.],
 
 
 initialize(InitState,1) :-
-	initBoard(InitState).
+	forcing1toDoNullMoves(InitState).
+	%rndBoardXYZ(InitState).
+	%initBoard(InitState).
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
 %
@@ -165,12 +173,10 @@ printList([H | L]) :-
 %   - returns list MvList of all legal moves Plyr can make in State
 %
 
-
 moves(Plyr, [Row|RestBoard], MvList) :- 
 	length(Row, Len),
 	N is Len - 1,
-    findall([X,Y], ( between(0, N, X), between(0, N, Y), 
-    validmove(Plyr, [Row|RestBoard], [X,Y]) ), MvList).
+    findall([X,Y], ( between(0, N, X), between(0, N, Y), validmove(Plyr, [Row|RestBoard], [X,Y]) ), MvList).
 	% TODO: add sort list
 
 
@@ -184,6 +190,10 @@ moves(Plyr, [Row|RestBoard], MvList) :-
 %
 
 % Will always be a valid move since it is checked in play.pl
+
+nextState(Plyr,[n],State,State,Opp) :-
+	opponent(Plyr, Opp).
+
 nextState(Plyr,Move,State,NewState,NextPlyr) :-
 	set(State, TS, Move, Plyr),
 	dirs(Dirs),
@@ -228,6 +238,7 @@ border_check([Row|_], [X, Y]) :-
 	X >= 0, X < N,
 	Y >= 0, Y < N.
 
+validmove(_, _, [n]) :- true.
 validmove(Plyr,State,Proposed) :-
 	% Position must be empty
 	get(State, Proposed, '.'),
@@ -272,13 +283,10 @@ check_chain(State, Plyr, [X, Y], [DX, DY]) :-
 
 h(State, -99):-
 	winner(State, 1),!.
-
 h(State, 99) :-
 	winner(State, 2),!.
-
 h(State, 0) :-
 	tie(State), !.
-
 h(_,0).
 
 
