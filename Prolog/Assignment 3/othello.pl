@@ -66,7 +66,7 @@
 %
 % given helper: Inital state of the board
 
-initBoard([	[.,2,2,2,2,1], 
+initBoard([	[.,.,.,.,.,.], 
             [.,.,.,.,.,.],
 	    	[.,.,1,2,.,.], 
 	    	[.,.,2,1,.,.], 
@@ -171,6 +171,7 @@ moves(Plyr, [Row|RestBoard], MvList) :-
 	N is Len - 1,
     findall([X,Y], ( between(0, N, X), between(0, N, Y), 
     validmove(Plyr, [Row|RestBoard], [X,Y]) ), MvList).
+	% TODO: add sort list
 
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
@@ -192,23 +193,20 @@ nextState(Plyr,Move,State,NewState,NextPlyr) :-
 	moves(Opp, NewState, MvList),
 	(MvList == [] -> NextPlyr = Plyr ; NextPlyr = Opp).
 
-flipStones(State, _, _, [], State). % Base case: all directions done
-flipStones(State, Plyr, Move, [Dir|Dirs], NewState) :-
-	flip(State, State, Plyr, Move, Dir, TS),
-	flipStones(TS, Plyr, Move, Dirs, NewState).	% Next direction
+flipStones(State, Plyr, Move, Dirs, NewState) :-
+	member(Dir, Dirs),
+	flip(State, Plyr, Move, Dir, NewState).
 
-flip(State, OGS, Plyr, [X, Y], [DX, DY], NewState) :-
+flip(State, Plyr, [X, Y], [DX, DY], NewState) :-
 	X1 is X + DX,
-	Y1 is Y + DY,
-	border_check(State, [X1,Y1]),
-	opponent(Plyr, Opp),
-	get(State, [X1,Y1], Val),
+    Y1 is Y + DY,
+    border_check(State, [X1,Y1]),!, 				% Check if inside board
+    get(State, [X1,Y1], Val),			
 	(
-		Val == Opp -> set(State, TS, [X1, Y1], Plyr), flip(TS, OGS, Plyr, [X1, Y1], [DX, DY], NewState) ;
-		Val == Plyr ->  NewState = State ;
-		Val == '.' -> NewState = OGS
-	).
-
+        Val == Plyr -> NewState = State ;           % End of a valid chain
+        Val == '.'  -> fail ;                 		% Chain broken — no flip possible
+        set(State, TS, [X1, Y1], Plyr), flip(TS, Plyr, [X1,Y1], [DX, DY], NewState) % Continue walking forward
+    ).
 
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
@@ -236,7 +234,6 @@ validmove(Plyr,State,Proposed) :-
 	dirs(Dirs),
 	member(Dir, Dirs),
 	check_direction(State, Plyr, Opp, Proposed, Dir).
-	% TODO: add sort list
 
 check_direction(State, Plyr, Opp, [X, Y], [DX, DY]) :-
     X1 is X + DX,
