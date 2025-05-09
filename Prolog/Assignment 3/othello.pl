@@ -193,9 +193,11 @@ nextState(Plyr,Move,State,NewState,NextPlyr) :-
 	moves(Opp, NewState, MvList),
 	(MvList == [] -> NextPlyr = Plyr ; NextPlyr = Opp).
 
-flipStones(State, Plyr, Move, Dirs, NewState) :-
-	member(Dir, Dirs),
-	flip(State, Plyr, Move, Dir, NewState).
+flipStones(State, _, _, [], State).
+flipStones(State, Plyr, Move, [Dir|Dirs], NewState) :-
+	(flip(State, Plyr, Move, Dir, TS) -> true ; TS = State),
+	flipStones(TS, Plyr, Move, Dirs, NewState).
+
 
 flip(State, Plyr, [X, Y], [DX, DY], NewState) :-
 	X1 is X + DX,
