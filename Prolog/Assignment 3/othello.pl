@@ -87,7 +87,7 @@ initBoard([	[.,.,.,.,.,.],
 %%%  InitialPlyr is the player who moves first. 
 
 
-initialize(InitState,2) :-
+initialize(InitState,1) :-
 	forcing2toDoNullMove(InitState).
 	%rndBoardXYZ(InitState).
 	%initBoard(InitState).
@@ -206,7 +206,7 @@ nextState(Plyr,Move,State,NewState,NextPlyr) :-
 	% Check player for next turn
 	opponent(Plyr, Opp),
 	moves(Opp, NewState, MvList),
-	(MvList == [] -> writeln('Opponent has no valid moves. Go again!'), NextPlyr = Plyr ; NextPlyr = Opp).
+	(MvList == [] -> NextPlyr = Plyr ; NextPlyr = Opp).
 
 flipStones(State, _, _, [], State).
 flipStones(State, Plyr, Move, [Dir|Dirs], NewState) :-
