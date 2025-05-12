@@ -75,9 +75,9 @@
 % given helper: Inital state of the board
 
 initBoard([  [.,.,.,.,.,.], 
-             [.,.,2,.,.,.],
              [.,.,.,.,.,.],
-             [.,.,.,1,.,.],
+             [.,.,1,2,.,.],
+             [.,.,2,1,.,.],
              [.,.,.,.,.,.],
              [.,.,.,.,.,.] ]).
 
@@ -90,9 +90,11 @@ initBoard([  [.,.,.,.,.,.],
 
 
 initialize(InitState,1) :-
-	%forcing2toDoNullMove(InitState).
-	%rndBoardXYZ(InitState).
 	initBoard(InitState).
+	%testBoard1(InitState).
+	%testBoard2(InitState).
+	%testBoard3(InitState).
+	%rndBoardXYZ(InitState).
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
 %
@@ -127,9 +129,9 @@ winner(State, Plyr) :-
 
 
 tie(State) :-
-	terminal(State), % check if state is terminal
-	score(State, 1, S1), score(State, 2, S2), % calculate scores for each player
-	S1 == S2. % check if scores are equal
+	terminal(State), 							% check if state is terminal
+	score(State, 1, S1), score(State, 2, S2), 	% calculate scores for each player
+	S1 =:= S2. 									% check if scores are equal
 
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
@@ -142,9 +144,8 @@ tie(State) :-
 
 terminal(State) :-
 	% Check moves for each player, If both are empty, the game is over
-	moves(1,State,ML1),
-	moves(2,State,ML2),
-	(ML1 == [], ML2 == [] -> true ; false),!.
+	moves(1,State,[]),
+	moves(2,State,[]).
 
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
@@ -298,19 +299,15 @@ check_chain(State, Plyr, [X, Y], [DX, DY]) :-
 
 corners([[0,0], [0,5], [5,0], [5,5]]).
 
-h(State, -99) :-
-	winner(State, 1),!.
 h(State, 99) :-
+	winner(State, 1),!.
+h(State, -99) :-
 	winner(State, 2),!.
 h(State, Val) :- 
-    score(State, 1, C1), !,
-    score(State, 2, C2), !,
-    moves(1, State, Moves1), !,
-    moves(2, State, Moves2), !,
-    length(Moves1, M1),
-    length(Moves2, M2),
-    Val is (C2 - C1) + (M2 + M1),!.
-h(State, Val) :- % check "Stable stones" in all corners
+    score(State, 1, C1),
+    score(State, 2, C2),
+    moves(1, State, Moves1), length(Moves1, M1),
+    moves(2, State, Moves2), length(Moves2, M2),
 	corners(CL),
 	findall(1, 
 		(
@@ -318,7 +315,7 @@ h(State, Val) :- % check "Stable stones" in all corners
         get(State, [X,Y], 2)
 		), OwnedCorners),
 	length(OwnedCorners, Corners),
-	Val is Corners * (-20),!.
+    Val is (C2 - C1) + (M2 - M1) + (Corners * 25),!.
 h(State, 0) :-
 	tie(State),!.
 h(_,0).
@@ -333,7 +330,7 @@ h(_,0).
 %     of all states.
 
 
-lowerBound(-100).
+lowerBound(-150).
 
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
@@ -344,7 +341,7 @@ lowerBound(-100).
 %   - returns a value B that is greater than the actual or heuristic value
 %     of all states.
 
-upperBound(100).
+upperBound(150).
 
 
 

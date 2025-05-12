@@ -83,6 +83,7 @@ play :- initialize(InitState,Plyr), playgame(Plyr,InitState).
 %   and player, and continue from new state/player 
  
 playgame(_,State) :- 
+  writeln('Checking for winner...'),
   winner(State,Winner), !, 
   % winner(State,Winner,Score), 
   write('Win by Player number '), writeln(Winner),
@@ -91,6 +92,7 @@ playgame(_,State) :-
   % write('With Score '), writeln(Score). 
  
 playgame(_,State) :- 
+  writeln('Checking for tie...'),
   tie(State), !, 
   writeln('Game ended with no winner!'). 
  

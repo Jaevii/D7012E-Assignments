@@ -11,4 +11,4 @@ fi
 # It assumes that the Prolog interpreter is installed and available in the PATH
 
 # Runs the program
-swipl -q -s othello.pl -g "play."
+swipl -q -s othello.pl -g "play, halt."
