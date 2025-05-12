@@ -90,11 +90,11 @@ initBoard([  [.,.,.,.,.,.],
 
 
 initialize(InitState,1) :-
-	initBoard(InitState).
+	%initBoard(InitState).
 	%testBoard1(InitState).
 	%testBoard2(InitState).
 	%testBoard3(InitState).
-	%rndBoardXYZ(InitState).
+	rndBoardXYZ(InitState).
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
 %
@@ -155,18 +155,25 @@ terminal(State) :-
 %%
 
 showState( G ) :- 
-	printRows( G ). 
- 
-printRows( [] ). 
-printRows( [H|L] ) :- 
-	printList(H),
+	writeln('       [0]     [1]     [2]     [3]     [4]     [5]'),
 	nl,
-	printRows(L). 
+	printRows( G, 0). 
+ 
+printRows( [], _). 
+printRows( [H|L], Index ) :-
+	write('['),
+	write(Index),
+	write(']'),
+	write('	'),
+	printList(H),
+	nl, nl,
+	Next is Index + 1,
+	printRows(L, Next). 
 
 printList([]).
 printList([H | L]) :-
 	write(H),
-	write(' '),
+	write('	'),
 	printList(L).
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
@@ -177,11 +184,11 @@ printList([H | L]) :-
 %   - returns list MvList of all legal moves Plyr can make in State
 %
 
+
 moves(Plyr, [Row|RestBoard], MvList) :- 
 	length(Row, Len),
 	N is Len - 1,
     findall([X,Y], ( between(0, N, X), between(0, N, Y), validmove(Plyr, [Row|RestBoard], [X,Y]) ), MvList).
-	% TODO: add sort list
 
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
