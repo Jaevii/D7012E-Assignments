@@ -11,7 +11,7 @@
 
 
 %do not change the following line!
-:- ensure_loaded('play.pl').
+%:- ensure_loaded('play.pl').
 
 % For rndBoardXYZ(B)
 :- ensure_loaded('rndBoard.pl').
@@ -19,6 +19,8 @@
 % For testboard(B)
 :- ensure_loaded('testboards.pl').
 
+% For testing
+:- ensure_loaded('stupid.pl').
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
 %
@@ -72,12 +74,12 @@
 %
 % given helper: Inital state of the board
 
-initBoard([	[.,.,.,.,.,.], 
-            [.,.,.,.,.,.],
-	    	[.,.,1,2,.,.], 
-	    	[.,.,2,1,.,.], 
-            [.,.,.,.,.,.], 
-	    	[.,.,.,.,.,.] ]).
+initBoard([  [.,.,.,.,.,.], 
+             [.,.,2,.,.,.],
+             [.,.,.,.,.,.],
+             [.,.,.,1,.,.],
+             [.,.,.,.,.,.],
+             [.,.,.,.,.,.] ]).
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
 %
@@ -88,9 +90,9 @@ initBoard([	[.,.,.,.,.,.],
 
 
 initialize(InitState,1) :-
-	forcing2toDoNullMove(InitState).
+	%forcing2toDoNullMove(InitState).
 	%rndBoardXYZ(InitState).
-	%initBoard(InitState).
+	initBoard(InitState).
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
 %
@@ -140,8 +142,9 @@ tie(State) :-
 
 terminal(State) :-
 	% Check moves for each player, If both are empty, the game is over
-	moves(1,State,[]),
-	moves(2,State,[]).
+	moves(1,State,ML1),
+	moves(2,State,ML2),
+	(ML1 == [], ML2 == [] -> true ; false),!.
 
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
@@ -199,6 +202,10 @@ nextState(Plyr,[n],State,State,Opp) :-
 	opponent(Plyr, Opp),
 	writeln('Player has passed the turn!').
 
+nextState(Plyr,n,State,State,Opp) :-
+	opponent(Plyr, Opp),
+	writeln('Stupid has passed the turn!').
+
 nextState(Plyr,Move,State,NewState,NextPlyr) :-
 	set(State, TS, Move, Plyr),
 	dirs(Dirs),
@@ -243,8 +250,11 @@ border_check([Row|_], [X, Y]) :-
 	X >= 0, X < N,
 	Y >= 0, Y < N.
 
-validmove(1, _, [n]) :- true.
+validmove(1, State, [n]) :- 
+	moves(1, State, MvList),
+	(MvList == [] -> true ; writeln('You cannot skip when there are legal moves'), false).
 validmove(2, _, null) :- true.
+validmove(1, _, n) :- true.
 validmove(Plyr,State,Proposed) :-
 	% Position must be empty
 	get(State, Proposed, '.'),
@@ -257,7 +267,7 @@ validmove(Plyr,State,Proposed) :-
 check_direction(State, Plyr, Opp, [X, Y], [DX, DY]) :-
     X1 is X + DX,
     Y1 is Y + DY,
-    border_check(State, [X1,Y1]), 					% Check if inside board
+    border_check(State, [X1,Y1]),!, 				% Check if inside board
     get(State, [X1,Y1], Val),
 	Val == Opp, 									% Check if there is an adjacent opponent stone
 	check_chain(State, Plyr, [X1, Y1], [DX, DY]). 	% Check the resulting chain
@@ -265,11 +275,11 @@ check_direction(State, Plyr, Opp, [X, Y], [DX, DY]) :-
 check_chain(State, Plyr, [X, Y], [DX, DY]) :-
     X1 is X + DX,
     Y1 is Y + DY,
-    border_check(State, [X1,Y1]), 					% Check if inside board
+    border_check(State, [X1,Y1]),!, 				% Check if inside board
     get(State, [X1,Y1], Val),			
 	(
         Val == Plyr -> true ;                  		% End of a valid chain
-        Val == '.'  -> false ;                 		% Chain broken — no flip possible
+        Val == '.'  -> fail ;                 		% Chain broken — no flip possible
         check_chain(State, Plyr, [X1,Y1], [DX, DY]) % Continue walking forward
     ).
 
@@ -286,13 +296,31 @@ check_chain(State, Plyr, [X, Y], [DX, DY]) :-
 %          the value of state (see handout on ideas about
 %          good heuristics.
 
+corners([[0,0], [0,5], [5,0], [5,5]]).
 
-h(State, -99):-
+h(State, -99) :-
 	winner(State, 1),!.
 h(State, 99) :-
 	winner(State, 2),!.
+h(State, Val) :- 
+    score(State, 1, C1), !,
+    score(State, 2, C2), !,
+    moves(1, State, Moves1), !,
+    moves(2, State, Moves2), !,
+    length(Moves1, M1),
+    length(Moves2, M2),
+    Val is (C2 - C1) + (M2 + M1),!.
+h(State, Val) :- % check "Stable stones" in all corners
+	corners(CL),
+	findall(1, 
+		(
+		member([X,Y], CL),
+        get(State, [X,Y], 2)
+		), OwnedCorners),
+	length(OwnedCorners, Corners),
+	Val is Corners * (-20),!.
 h(State, 0) :-
-	tie(State), !.
+	tie(State),!.
 h(_,0).
 
 
@@ -305,7 +333,7 @@ h(_,0).
 %     of all states.
 
 
-lowerBound(-150).
+lowerBound(-100).
 
 
 % DO NOT CHANGE THIS BLOCK OF COMMENTS.
@@ -316,7 +344,7 @@ lowerBound(-150).
 %   - returns a value B that is greater than the actual or heuristic value
 %     of all states.
 
-upperBound(150).
+upperBound(100).
 
 
 
